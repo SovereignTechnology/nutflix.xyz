@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nutflix — peer-to-peer video, paid in ecash</title>
-<meta name="description" content="Nutflix is a Nostr-native peer-to-peer video network where seeders are paid per delivered chunk in Cashu ecash. In active development.">
+<meta name="description" content="Nutflix is a Nostr-native peer-to-peer video network where seeders are paid per delivered chunk in Cashu ecash. Experimental software in active development.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23b45309'/%3E%3Cpath d='M12 9.5v13l11-6.5z' fill='white'/%3E%3C/svg%3E">
 <style>
 :root{
@@ -57,6 +57,8 @@ header{border-bottom:1px solid var(--border)}
   line-height:1.4;letter-spacing:-.01em;max-width:34ch;
 }
 .hero p{margin:0;max-width:62ch;color:var(--muted);font-size:1.05rem}
+.hero p.hero-note{margin-top:26px;font-size:.9rem;border-left:3px solid var(--accent);padding-left:14px;max-width:62ch}
+.hero p.hero-note strong{color:var(--ink)}
 
 /* sections headings */
 section{padding:56px 0;border-top:1px solid var(--border)}
@@ -132,11 +134,12 @@ footer .fine{font-size:.83rem}
 <main class="wrap">
 
   <div class="hero">
-    <div class="badge"><span class="dot"></span>In active development</div>
+    <div class="badge"><span class="dot"></span>Experimental software — in active development</div>
     <h1>Peer-to-peer video,<br>paid in <span>ecash</span>.</h1>
     <p class="tagline">Nutflix is a Nostr-native peer-to-peer video network where seeders are paid per delivered chunk in Cashu ecash.</p>
     <p>It looks like YouTube, not like a protocol demo. Watch a video and your wallet pays the peers keeping it seeded — a little at a time, chunk by chunk, as the video actually arrives.
     </p>
+    <p class="hero-note"><strong>Nutflix and NFX are experimental software, in active development.</strong> Protocols, formats and APIs change without notice — expect nothing stable.</p>
   </div>
 
   <section id="idea">
@@ -222,7 +225,7 @@ footer .fine{font-size:.83rem}
         <p>Per-chunk ecash payments to seeders, the money path of the nfx-pay crate, is under active adversarial audit.</p>
       </div>
     </div>
-    <p class="note">Testnet only: every sat on Nutflix today is a fake sat from a testnet mint. Nothing of value is at stake.</p>
+    <p class="note">Experimental software in active development. Testnet only: every sat on Nutflix today is a fake sat from a testnet mint — nothing of value is at stake.</p>
   </section>
 
   <footer>
