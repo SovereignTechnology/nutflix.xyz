@@ -3,243 +3,610 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0f0f0f" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fafafa" media="(prefers-color-scheme: light)">
 <title>Nutflix — peer-to-peer video, paid in ecash</title>
-<meta name="description" content="Nutflix is a Nostr-native peer-to-peer video network where seeders are paid per delivered chunk in Cashu ecash. Experimental software in active development.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23b45309'/%3E%3Cpath d='M12 9.5v13l11-6.5z' fill='white'/%3E%3C/svg%3E">
+<meta name="description" content="Nutflix is a peer-to-peer video network with no company in the middle: videos are announced on Nostr, streamed from other people's computers, and seeders are paid in Cashu ecash. Here is every repository behind it, explained in plain language.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nutflix.xyz/">
+<meta property="og:title" content="Nutflix — peer-to-peer video, paid in ecash">
+<meta property="og:description" content="A video network with no company in the middle. Every repository behind it, explained in plain language.">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23f0662a'/%3E%3Cpath d='M12.5 9.5v13l11-6.5z' fill='%230f0f0f'/%3E%3C/svg%3E">
 <style>
 :root{
-  --accent:#b45309;
-  --accent-soft:#fdf3e3;
-  --bg:#fffdf8;
-  --ink:#1c1917;
-  --muted:#6b6660;
-  --border:#e8e3dc;
-  --code:#f6f2ec;
+  color-scheme:dark;
+  --bg:#0f0f0f;
+  --surface:#171717;
+  --surface-2:#212121;
+  --text:#f1f1f1;
+  --muted:#aaaaaa;
+  --faint:#8c8c8c;
+  --border:rgba(255,255,255,.1);
+  --border-strong:rgba(255,255,255,.22);
+  --accent:#f0662a;
+  --accent-text:#f47a43;
+  --accent-ink:#0f0f0f;
+  --accent-soft:rgba(240,102,42,.12);
+  --accent-line:rgba(240,102,42,.4);
+  --sats:#ffb454;
+  --ok:#4cc764;--ok-bg:#12301a;
+  --warn:#fdd663;--warn-bg:#3a2e10;
+  --info:#6cbcff;--info-bg:#10283d;
+  --glow-1:rgba(240,102,42,.26);
+  --glow-2:rgba(255,180,84,.1);
+  --grid:rgba(255,255,255,.05);
+  --shadow:0 18px 50px rgba(0,0,0,.55);
+  --header-bg:rgba(15,15,15,.72);
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme:light){
+  :root{
+    color-scheme:light;
+    --bg:#fafafa;
+    --surface:#ffffff;
+    --surface-2:#f2f2f2;
+    --text:#0f0f0f;
+    --muted:#5c5c5c;
+    --faint:#6e6e6e;
+    --border:rgba(0,0,0,.1);
+    --border-strong:rgba(0,0,0,.2);
+    --accent:#e8590c;
+    --accent-text:#b8400a;
+    --accent-soft:rgba(232,89,12,.09);
+    --accent-line:rgba(232,89,12,.45);
+    --sats:#9a4b00;
+    --ok:#146c2e;--ok-bg:#e6f4ea;
+    --warn:#8a4b00;--warn-bg:#fef3d6;
+    --info:#0b57a4;--info-bg:#e3f0fd;
+    --glow-1:rgba(232,89,12,.16);
+    --glow-2:rgba(255,180,84,.16);
+    --grid:rgba(0,0,0,.05);
+    --shadow:0 18px 44px rgba(0,0,0,.1);
+    --header-bg:rgba(250,250,250,.78);
+  }
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{-webkit-text-size-adjust:100%}
 body{
   margin:0;
   background:var(--bg);
-  color:var(--ink);
-  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color:var(--text);
+  font:17px/1.65 var(--sans);
   -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
 }
-.wrap{max-width:840px;margin:0 auto;padding:0 24px}
-a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+a{color:var(--accent-text);text-decoration:none}
+a:hover{text-decoration:underline;text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+code{font-family:var(--mono);font-size:.88em}
+.skip{position:absolute;left:-999px;top:8px;z-index:20;padding:10px 16px;border-radius:10px;background:var(--accent);color:var(--accent-ink);font-weight:700}
+.skip:focus{left:8px}
 
 /* header */
-header{border-bottom:1px solid var(--border)}
-.nav{display:flex;align-items:center;justify-content:space-between;padding:20px 0}
-.wordmark{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.1rem;letter-spacing:-.01em;color:var(--ink)}
+.top{
+  position:sticky;top:0;z-index:10;
+  background:var(--header-bg);
+  -webkit-backdrop-filter:saturate(160%) blur(14px);backdrop-filter:saturate(160%) blur(14px);
+  border-bottom:1px solid var(--border);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:20px;height:64px}
+.wordmark{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.12rem;letter-spacing:-.02em;color:var(--text)}
+.wordmark:hover{text-decoration:none}
 .wordmark svg{display:block}
-.nav a{color:var(--muted);font-weight:500}
-.nav a:hover{color:var(--accent);text-decoration:none}
+.nav-links{display:flex;align-items:center;gap:26px;font-size:.93rem;font-weight:500}
+.nav-links a{color:var(--muted)}
+.nav-links a:hover{color:var(--text);text-decoration:none}
+
+/* buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:12px 20px;border-radius:999px;border:1px solid transparent;
+  font-size:.97rem;font-weight:650;line-height:1.2;white-space:nowrap;
+  transition:transform .15s ease,background-color .15s ease,border-color .15s ease,box-shadow .15s ease;
+}
+.btn:hover{text-decoration:none;transform:translateY(-1px)}
+.btn svg{flex:none}
+.btn-primary{background:var(--accent);color:var(--accent-ink);box-shadow:0 8px 28px var(--glow-1)}
+.btn-primary:hover{box-shadow:0 10px 34px var(--accent-line)}
+.btn-ghost{background:var(--surface);color:var(--text);border-color:var(--border-strong)}
+.btn-ghost:hover{border-color:var(--accent-line)}
+.btn-sm{padding:8px 15px;font-size:.88rem}
 
 /* hero */
-.hero{padding:96px 0 72px}
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+.hero::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(58% 55% at 50% -8%,var(--glow-1),transparent 70%),
+    radial-gradient(34% 40% at 86% 4%,var(--glow-2),transparent 70%);
+}
+.hero::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:56px 56px;background-position:center top;
+  -webkit-mask-image:radial-gradient(72% 62% at 50% 0%,#000 25%,transparent 78%);
+  mask-image:radial-gradient(72% 62% at 50% 0%,#000 25%,transparent 78%);
+}
+.hero-in{position:relative;z-index:1;padding-top:92px;padding-bottom:84px;text-align:center}
 .badge{
-  display:inline-flex;align-items:center;gap:8px;
-  font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-  color:var(--accent);background:var(--accent-soft);
-  border:1px solid #e6cdb4;border-radius:999px;padding:5px 14px;margin-bottom:28px;
+  display:inline-flex;align-items:center;gap:9px;
+  font-size:.78rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--accent-text);background:var(--accent-soft);
+  border:1px solid var(--accent-line);border-radius:999px;padding:6px 15px;margin-bottom:30px;
 }
-.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 2s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .hero h1{
-  margin:0 0 20px;font-size:clamp(2.6rem,6vw,4rem);font-weight:800;
-  letter-spacing:-.03em;line-height:1.05;
+  margin:0 auto 24px;text-wrap:balance;
+  font-size:clamp(2rem,8.6vw,5rem);font-weight:800;letter-spacing:-.045em;line-height:1.02;
 }
-.hero h1 span{color:var(--accent)}
-.tagline{
-  margin:0 0 24px;font-size:clamp(1.15rem,2.4vw,1.45rem);font-weight:500;
-  line-height:1.4;letter-spacing:-.01em;max-width:34ch;
+.hero h1 .nb{white-space:nowrap}
+.hero h1 .grad{
+  background:linear-gradient(100deg,var(--accent) 10%,var(--sats) 95%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
 }
-.hero p{margin:0;max-width:62ch;color:var(--muted);font-size:1.05rem}
-.hero p.hero-note{margin-top:26px;font-size:.9rem;border-left:3px solid var(--accent);padding-left:14px;max-width:62ch}
-.hero p.hero-note strong{color:var(--ink)}
+.tagline{margin:0 auto 36px;max-width:60ch;font-size:clamp(1.08rem,2.1vw,1.28rem);line-height:1.55;color:var(--muted)}
+.cta{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
 
-/* sections headings */
-section{padding:56px 0;border-top:1px solid var(--border)}
-.kicker{
-  font-size:.75rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--accent);margin:0 0 8px;
+/* the spend bar */
+.spend{
+  margin:60px auto 0;max-width:760px;padding:22px 24px 20px;text-align:left;
+  border:1px solid var(--border);border-radius:20px;
+  background:linear-gradient(180deg,var(--surface),var(--bg));box-shadow:var(--shadow);
 }
-h2{margin:0 0 36px;font-size:1.6rem;font-weight:700;letter-spacing:-.02em}
+.spend-head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.spend-play{
+  flex:none;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;
+  background:var(--accent);color:var(--accent-ink);
+}
+.spend-title{margin:0;font-size:.98rem;font-weight:650;letter-spacing:-.01em}
+.spend-title span{display:block;font-size:.84rem;font-weight:400;color:var(--muted);letter-spacing:0}
+.bar{position:relative;height:8px;border-radius:999px;background:var(--surface-2);overflow:hidden}
+.bar i{position:absolute;top:0;bottom:0;border-radius:999px}
+.bar .buffered{left:0;width:62%;background:var(--sats);opacity:.55;animation:buffer 3.2s ease-in-out infinite}
+.bar .played{left:0;width:38%;background:var(--accent)}
+@keyframes buffer{0%,100%{width:56%}50%{width:66%}}
+.legend{display:flex;flex-wrap:wrap;gap:8px 24px;margin:16px 0 0;padding:0;list-style:none;font-size:.84rem;color:var(--muted)}
+.legend li{display:flex;align-items:center;gap:8px}
+.sw{flex:none;width:10px;height:10px;border-radius:3px;background:var(--surface-2);border:1px solid var(--border-strong)}
+.sw-played{background:var(--accent);border-color:transparent}
+.sw-buffered{background:var(--sats);opacity:.6;border-color:transparent}
 
-/* cards */
-.grid{display:grid;gap:16px}
-.cards{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
-.card{
-  border:1px solid var(--border);border-radius:12px;padding:22px;
-  background:#fffefb;
-}
-.card h3{margin:0 0 8px;font-size:1.02rem;font-weight:700;letter-spacing:-.01em}
-.card p{margin:0;font-size:.92rem;color:var(--muted)}
-.card .glyph{font-size:1.15rem;color:var(--accent);display:block;margin-bottom:12px}
+/* sections */
+section{padding:96px 0;border-bottom:1px solid var(--border);scroll-margin-top:64px}
+.kicker{margin:0 0 12px;font-family:var(--mono);font-size:.78rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-text)}
+h2{margin:0 0 16px;max-width:24ch;text-wrap:balance;font-size:clamp(1.9rem,4.2vw,2.75rem);font-weight:780;letter-spacing:-.035em;line-height:1.1}
+.lead{margin:0 0 48px;max-width:64ch;font-size:1.08rem;color:var(--muted)}
+h3{margin:0;font-weight:700;letter-spacing:-.02em}
 
-/* tracks */
-.tracks{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
-.track{border:1px solid var(--border);border-radius:12px;padding:26px;background:#fffefb}
-.track h3{margin:0 0 4px;font-size:1.15rem;font-weight:800;letter-spacing:-.01em}
-.track h3 a{color:inherit;text-decoration:none;border-bottom:1px solid var(--border)}
-.track h3 a:hover{border-bottom-color:var(--accent);text-decoration:none}
-.track .role{margin:0 0 16px;font-size:.8rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
-.track p{margin:0 0 18px;font-size:.95rem;color:var(--muted)}
-.tags{display:flex;flex-wrap:wrap;gap:8px}
-.tags span{
-  font-size:.75rem;font-weight:600;color:#57534e;background:var(--code);
-  border:1px solid var(--border);border-radius:6px;padding:3px 9px;
+/* pills and tags */
+.pill{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:.74rem;font-weight:650;letter-spacing:.05em;text-transform:uppercase;
+  padding:4px 11px;border-radius:999px;color:var(--ok);background:var(--ok-bg);
 }
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.pill-warn{color:var(--warn);background:var(--warn-bg)}
+.pill-info{color:var(--info);background:var(--info-bg)}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin:0;padding:0;list-style:none}
+.tags li{
+  font-family:var(--mono);font-size:.74rem;color:var(--muted);
+  background:var(--surface-2);border:1px solid var(--border);border-radius:7px;padding:3px 9px;
+}
+
+/* repositories */
+.repos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.repo{
+  position:relative;display:flex;flex-direction:column;padding:30px;
+  border:1px solid var(--border);border-radius:22px;
+  background:linear-gradient(180deg,var(--surface),var(--bg));
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+}
+.repo::before{
+  content:"";position:absolute;left:30px;right:30px;top:-1px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent-line),transparent);opacity:0;transition:opacity .2s ease;
+}
+.repo:hover{transform:translateY(-3px);border-color:var(--border-strong);box-shadow:var(--shadow)}
+.repo:hover::before{opacity:1}
+.slug{display:block;margin:20px 0 6px;font-family:var(--mono);font-size:.86rem;color:var(--text);overflow-wrap:anywhere}
+.slug span{color:var(--faint)}
+.repo h3{font-size:1.5rem;line-height:1.2;margin-bottom:16px}
+.repo p{margin:0 0 14px;color:var(--muted);font-size:.98rem}
+.repo p strong{color:var(--text);font-weight:600}
+.inside-label{margin:10px 0 10px;font-size:.74rem;font-weight:650;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.inside{margin:0 0 22px;padding:0;list-style:none;font-size:.93rem;color:var(--muted)}
+.inside li{position:relative;padding:5px 0 5px 20px}
+.inside li::before{content:"";position:absolute;left:2px;top:.95em;width:7px;height:7px;border-radius:2px;background:var(--accent);opacity:.85}
+.inside code{color:var(--text)}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px 20px;margin-top:auto;padding-top:26px}
+.actions .more{font-size:.92rem;font-weight:550}
+.repo-site{grid-column:1/-1;flex-direction:row;align-items:center;gap:28px;padding:24px 30px}
+.repo-site .site-text{flex:1;min-width:0}
+.repo-site .slug{margin-top:12px}
+.repo-site p{margin:0}
+.repo-site .actions{margin:0;padding:0}
+
+/* how the pieces fit */
+.flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:44px;margin:0;padding:0;list-style:none}
+.step{position:relative;padding:26px;border:1px solid var(--border);border-radius:20px;background:var(--surface)}
+.step:not(:last-child)::after{
+  content:"→";position:absolute;right:-44px;top:50%;width:44px;text-align:center;
+  transform:translateY(-50%);font-size:1.3rem;line-height:1;color:var(--accent-text);
+}
+.step-k{margin:0 0 10px;font-family:var(--mono);font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-text)}
+.step h3{font-size:1.22rem;margin-bottom:10px}
+.step > p{margin:0 0 18px;font-size:.95rem;color:var(--muted)}
+.parts{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.parts li{padding:11px 14px;border:1px solid var(--border);border-radius:12px;background:var(--bg);font-size:.9rem;color:var(--muted);line-height:1.45}
+.parts b{display:block;color:var(--text);font-weight:650}
+.fit-note{margin:36px 0 0;max-width:72ch;font-size:.98rem;color:var(--muted)}
+.fit-note strong{color:var(--text);font-weight:600}
+
+/* the idea */
+.ideas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.idea{padding:24px;border:1px solid var(--border);border-radius:18px;background:var(--surface)}
+.idea .n{display:block;margin-bottom:16px;font-family:var(--mono);font-size:.8rem;color:var(--accent-text)}
+.idea h3{font-size:1.05rem;margin-bottom:8px}
+.idea p{margin:0;font-size:.93rem;color:var(--muted)}
 
 /* protocol */
-.proto{grid-template-columns:repeat(2,1fr)}
-.proto-item{
-  display:flex;gap:14px;align-items:baseline;
-  padding:12px 4px;border-bottom:1px solid var(--border);
-}
-.proto-item code{font-size:.8rem;font-weight:700;color:var(--accent);white-space:nowrap}
-.proto-item span{font-size:.92rem;color:var(--ink)}
-.note{margin-top:22px;font-size:.9rem;color:var(--muted);font-style:italic}
-.note b{font-style:normal;color:var(--ink)}
+.proto{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 44px;margin:0;padding:0;list-style:none}
+.proto li{display:flex;align-items:baseline;gap:14px;padding:13px 2px;border-bottom:1px solid var(--border);font-size:.95rem}
+.proto code{flex:none;font-size:.8rem;font-weight:700;color:var(--accent-text)}
+.proto span{flex:1;min-width:0}
+.proto em{flex:none;font-style:normal;font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+.proto em.frozen{color:var(--ok)}
+.note{margin:28px 0 0;max-width:76ch;font-size:.95rem;color:var(--muted)}
+.note strong{color:var(--text);font-weight:600}
 
 /* status */
-.status-card{display:flex;gap:18px;align-items:flex-start;padding:20px 22px;border:1px solid var(--border);border-radius:12px;background:#fffefb;margin-bottom:14px}
-.status-card .mark{font-size:1.1rem;line-height:1.4}
-.status-card h3{margin:0 0 6px;font-size:1.02rem;font-weight:700}
-.status-card p{margin:0;font-size:.93rem;color:var(--muted)}
+.status{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.stat{padding:26px;border:1px solid var(--border);border-radius:18px;background:var(--surface)}
+.stat h3{margin:18px 0 8px;font-size:1.12rem}
+.stat p{margin:0;font-size:.94rem;color:var(--muted)}
+.caution{
+  margin:28px 0 0;padding:18px 22px;border:1px solid var(--border);border-left:3px solid var(--accent);
+  border-radius:14px;background:var(--surface);font-size:.95rem;color:var(--muted);
+}
+.caution strong{color:var(--text);font-weight:600}
 
 /* footer */
-footer{border-top:1px solid var(--border);padding:36px 0 48px;color:var(--muted)}
-footer .links{display:flex;flex-wrap:wrap;gap:22px;margin-bottom:18px;font-size:.92rem;font-weight:500}
-footer .fine{font-size:.83rem}
+footer{padding:48px 0 64px;color:var(--muted)}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:28px 48px}
+.foot-links{display:flex;flex-wrap:wrap;gap:10px 24px;margin:0;padding:0;list-style:none;font-family:var(--mono);font-size:.86rem}
+.foot-links a{color:var(--muted)}
+.foot-links a:hover{color:var(--accent-text)}
+.fine{margin:26px 0 0;font-size:.85rem;color:var(--faint);max-width:80ch}
+.fine a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
 
-@media (max-width:640px){
-  .hero{padding:64px 0 48px}
+@media (max-width:980px){
+  .ideas{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .status{grid-template-columns:1fr}
+  .flow{grid-template-columns:1fr;gap:44px}
+  .step:not(:last-child)::after{content:"↓";right:auto;left:0;top:auto;bottom:-44px;width:100%;height:44px;line-height:44px;transform:none}
+}
+@media (max-width:820px){
+  .repos{grid-template-columns:1fr}
   .proto{grid-template-columns:1fr}
+  .nav-links a:not(.btn){display:none}
+}
+@media (max-width:640px){
+  body{font-size:16px}
+  section{padding:68px 0}
+  .hero-in{padding-top:60px;padding-bottom:60px}
+  .badge{font-size:.7rem;letter-spacing:.05em;padding:6px 13px}
+  .lead{margin-bottom:36px}
+  .repo{padding:24px}
+  .repo::before{left:24px;right:24px}
+  .repo h3{font-size:1.32rem}
+  .repo-site{flex-direction:column;align-items:flex-start;gap:18px;padding:24px}
+  .ideas{grid-template-columns:1fr}
+  .spend{margin-top:44px;padding:18px}
+  .cta .btn{flex:1 1 100%}
+}
+@media (prefers-reduced-motion:no-preference){
+  html{scroll-behavior:smooth}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
 }
 </style>
 </head>
 <body>
 
-<header>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="gh" viewBox="0 0 16 16"><path fill="currentColor" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></symbol>
+</svg>
+
+<a class="skip" href="#repos">Skip to the repositories</a>
+
+<header class="top">
   <div class="wrap nav">
-    <div class="wordmark">
-      <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#b45309"/><path d="M12 9.5v13l11-6.5z" fill="white"/></svg>
+    <a class="wordmark" href="#top" aria-label="Nutflix, top of page">
+      <svg width="24" height="24" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#f0662a"/><path d="M12.5 9.5v13l11-6.5z" fill="#0f0f0f"/></svg>
       nutflix
-    </div>
-    <a href="https://git.sovit.xyz/npub1s0vtechh66tx7vrwdud8zfyheu9zca7swwfrzd4qu2a4f93mxs6qvn9adx/git.sovit.xyz/nfx">git.sovit.xyz ↗</a>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#repos">Repositories</a>
+      <a href="#fit">How it fits</a>
+      <a href="#protocol">Protocol</a>
+      <a href="#status">Status</a>
+      <a class="btn btn-ghost btn-sm" href="https://web.nutflix.xyz/">Web player <span aria-hidden="true">↗</span></a>
+    </nav>
   </div>
 </header>
 
-<main class="wrap">
+<main id="top">
 
   <div class="hero">
-    <div class="badge"><span class="dot"></span>Experimental software — in active development</div>
-    <h1>Peer-to-peer video,<br>paid in <span>ecash</span>.</h1>
-    <p class="tagline">Nutflix is a Nostr-native peer-to-peer video network where seeders are paid per delivered chunk in Cashu ecash.</p>
-    <p>It looks like YouTube, not like a protocol demo. Watch a video and your wallet pays the peers keeping it seeded — a little at a time, chunk by chunk, as the video actually arrives.
-    </p>
-    <p class="hero-note"><strong>Nutflix and NFX are experimental software, in active development.</strong> Protocols, formats and APIs change without notice — expect nothing stable.</p>
+    <div class="wrap hero-in">
+      <div class="badge"><span class="dot"></span>Experimental · in active development</div>
+      <h1><span class="nb">Peer-to-peer</span> video,<br>paid in <span class="grad">ecash</span>.</h1>
+      <p class="tagline">Nutflix is a video network with no company in the middle. Videos are announced on Nostr, streamed from other people's computers, and the people who seed them are paid by the people who watch.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="https://web.nutflix.xyz/">Open the web player <span aria-hidden="true">↗</span></a>
+        <a class="btn btn-ghost" href="#repos"><svg width="17" height="17" aria-hidden="true"><use href="#gh"/></svg>Browse the code</a>
+      </div>
+
+      <div class="spend">
+        <div class="spend-head">
+          <span class="spend-play" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M4 2.2v9.6L12 7z" fill="currentColor"/></svg></span>
+          <p class="spend-title">The whole idea in one bar: buffer is a spend bar<span>You pay for video as it arrives, a few sats at a time. Pause, and the payments stop.</span></p>
+        </div>
+        <div class="bar" aria-hidden="true"><i class="buffered"></i><i class="played"></i></div>
+        <ul class="legend">
+          <li><span class="sw sw-played"></span>Watched and paid for</li>
+          <li><span class="sw sw-buffered"></span>Buffered: being paid for now</li>
+          <li><span class="sw"></span>Not fetched: costs nothing</li>
+        </ul>
+      </div>
+    </div>
   </div>
 
-  <section id="idea">
-    <p class="kicker">The idea</p>
-    <h2>Buffer = money</h2>
-    <div class="grid cards">
-      <div class="card">
-        <span class="glyph">▶</span>
-        <h3>Buffer is a spend bar</h3>
-        <p>Prefetch depth is a spend decision. Pause the player and the payments stop. You only pay for chunks that actually arrive.</p>
-      </div>
-      <div class="card">
-        <span class="glyph">⚡</span>
-        <h3>Pay per chunk</h3>
-        <p>Every chunk that reaches your player carries a tiny Cashu payment to the peer that served it. No subscriptions, no invoices for things you didn't watch.</p>
-      </div>
-      <div class="card">
-        <span class="glyph">⊘</span>
-        <h3>50/50 by default</h3>
-        <p>Creators and the seeder pool split earnings evenly — enforced by the seeder requiring two locked sets of proofs, one for each side.</p>
-      </div>
-      <div class="card">
-        <span class="glyph">◈</span>
-        <h3>Nostr-native</h3>
-        <p>Discovery rides Nostr: manifests, availability beacons, comments, search and playlists are events — not rows in someone's database.</p>
+  <section id="repos">
+    <div class="wrap">
+      <p class="kicker">The repositories</p>
+      <h2>Everything is open. Here is what each piece does.</h2>
+      <p class="lead">Nutflix is built in the open across a handful of repositories. Each one is explained below in plain language, with a link to its code on GitHub.</p>
+
+      <div class="repos">
+
+        <article class="repo">
+          <div><span class="pill">Released · free video</span></div>
+          <a class="slug" href="https://github.com/SovereignTechnology/nfx"><span>SovereignTechnology/</span>nfx</a>
+          <h3>The open standard, and the Rust engine that runs it</h3>
+          <p>NFX is the rulebook underneath Nutflix, together with the software that proves the rules work. A creator publishes a signed description of a video on Nostr. Anyone can keep a copy and serve it. Before your player shows you anything, it checks every piece of the video against the creator's signed hashes, so nobody in the middle can swap what you are watching.</p>
+          <p><strong>Free video works today</strong> on a public test network. Paying seeders for each chunk in ecash is written into the standard and is still being audited before it is switched on.</p>
+          <p class="inside-label">What's inside</p>
+          <ul class="inside">
+            <li>The protocol documents, public domain, for anyone to build against</li>
+            <li><code>nfxd</code>, a node with no screen that publishes and seeds video, on a server or at home</li>
+            <li><code>nfx-package</code>, which turns an ordinary video file into verifiable, streamable segments</li>
+            <li>A browser player that verifies every file before it plays it</li>
+          </ul>
+          <ul class="tags"><li>Rust</li><li>iroh</li><li>WebRTC</li><li>CMAF</li><li>Nostr</li></ul>
+          <div class="actions">
+            <a class="btn btn-ghost btn-sm" href="https://github.com/SovereignTechnology/nfx"><svg width="16" height="16" aria-hidden="true"><use href="#gh"/></svg>View on GitHub</a>
+            <a class="more" href="https://github.com/SovereignTechnology/nfx/tree/main/spec">Read the spec</a>
+            <a class="more" href="https://github.com/SovereignTechnology/nfx/releases">Releases</a>
+          </div>
+        </article>
+
+        <article class="repo">
+          <div><span class="pill">Released for Linux · demo</span></div>
+          <a class="slug" href="https://github.com/SovereignTechnology/nutflix-pear"><span>SovereignTechnology/</span>nutflix-pear</a>
+          <h3>The desktop app</h3>
+          <p>Nutflix as an app you install. It looks like a video site you already know, with a home page, search, Shorts, channels, comments and playlists, but there is no company server behind it. Videos stream straight from other people's computers, and the people who watch pay the people who seed, a few sats at a time, as the video arrives.</p>
+          <p>Creators set the price and choose the mints they accept, and <strong>you see the price before you press Play</strong>. By default each payment is split 50/50 between the creator and the seeder. It is a demo: not something to trust with money you cannot afford to lose.</p>
+          <p class="inside-label">What's inside</p>
+          <ul class="inside">
+            <li>The desktop app, with a built-in Cashu wallet and a Studio for publishing</li>
+            <li>A seeding switch: serve videos from your own disk and earn the seeder's share</li>
+            <li>Seeder and gateway programs for machines with no screen</li>
+            <li>The source of the <a href="https://web.nutflix.xyz/">web player</a>, which plays free videos in a browser</li>
+          </ul>
+          <ul class="tags"><li>TypeScript</li><li>Electron</li><li>Hypercore</li><li>Cashu</li><li>Nostr</li></ul>
+          <div class="actions">
+            <a class="btn btn-ghost btn-sm" href="https://github.com/SovereignTechnology/nutflix-pear"><svg width="16" height="16" aria-hidden="true"><use href="#gh"/></svg>View on GitHub</a>
+            <a class="more" href="https://github.com/SovereignTechnology/nutflix-pear/releases/latest">Download for Linux</a>
+          </div>
+        </article>
+
+        <article class="repo">
+          <div><span class="pill pill-warn">Pre-alpha</span></div>
+          <a class="slug" href="https://github.com/SovereignTechnology/nutflix-runtime"><span>SovereignTechnology/</span>nutflix-runtime</a>
+          <h3>The app with no download server</h3>
+          <p>An experiment in shipping Nutflix without a website to download it from. You would install it from a <code>pear://</code> link, and it would update itself from that same link, over the peer-to-peer Pear network.</p>
+          <p>It reuses the desktop app's code, so it speaks the same language as the seeders that are already out there. The plan is for it to play free videos, trade video with web browsers, seed what it plays and publish new videos. <strong>Nothing here runs yet:</strong> the design is written down and the first pieces are in.</p>
+          <p class="inside-label">What's inside</p>
+          <ul class="inside">
+            <li>The design record, and the experiments that have to pass first</li>
+            <li>The worker: the part that moves video between peers</li>
+            <li>The desktop app's code, pinned to one exact version so the two stay compatible</li>
+          </ul>
+          <ul class="tags"><li>Pear</li><li>Bare</li><li>HyperDHT</li><li>TypeScript</li></ul>
+          <div class="actions">
+            <a class="btn btn-ghost btn-sm" href="https://github.com/SovereignTechnology/nutflix-runtime"><svg width="16" height="16" aria-hidden="true"><use href="#gh"/></svg>View on GitHub</a>
+          </div>
+        </article>
+
+        <article class="repo">
+          <div><span class="pill pill-info">Tooling · not yet published</span></div>
+          <a class="slug" href="https://github.com/SovereignTechnology/nutflix-nsite"><span>SovereignTechnology/</span>nutflix-nsite</a>
+          <h3>The web player, published on Nostr</h3>
+          <p>A small tool that publishes the Nutflix web player as an “nsite”: a website whose files live on public file servers and whose table of contents is a signed Nostr event, instead of everything sitting on one web host. Once it is published, any nsite gateway can serve the player, so watching does not depend on our server staying up.</p>
+          <p>There is no app code here. It takes one exact build of the web player, uploads each file under its own hash, signs the list, and then checks that gateways hand back the same bytes. <strong>The site itself has not been published yet.</strong></p>
+          <p class="inside-label">What's inside</p>
+          <ul class="inside">
+            <li>A publish script that uploads, signs and announces, and asks before it signs anything</li>
+            <li>A verify script that checks every gateway serves exactly the pinned files</li>
+            <li>The pin: the build it publishes, file by file and hash by hash</li>
+          </ul>
+          <ul class="tags"><li>Nostr</li><li>NIP-5A</li><li>Blossom</li><li>Node.js</li></ul>
+          <div class="actions">
+            <a class="btn btn-ghost btn-sm" href="https://github.com/SovereignTechnology/nutflix-nsite"><svg width="16" height="16" aria-hidden="true"><use href="#gh"/></svg>View on GitHub</a>
+          </div>
+        </article>
+
+        <article class="repo repo-site">
+          <div class="site-text">
+            <div><span class="pill">Live</span></div>
+            <a class="slug" href="https://github.com/SovereignTechnology/nutflix.xyz"><span>SovereignTechnology/</span>nutflix.xyz</a>
+            <p>This site. The page you are reading is a single HTML file with no build step.</p>
+          </div>
+          <div class="actions">
+            <a class="btn btn-ghost btn-sm" href="https://github.com/SovereignTechnology/nutflix.xyz"><svg width="16" height="16" aria-hidden="true"><use href="#gh"/></svg>View on GitHub</a>
+          </div>
+        </article>
+
       </div>
     </div>
   </section>
 
-  <section id="tracks">
-    <p class="kicker">Two tracks</p>
-    <h2>A demo and a redesign</h2>
-    <div class="grid tracks">
-      <div class="track">
-        <h3><a href="https://git.sovit.xyz/npub1s0vtechh66tx7vrwdud8zfyheu9zca7swwfrzd4qu2a4f93mxs6qvn9adx/git.sovit.xyz/nutflix-demo">Nutflix</a></h3>
-        <p class="role">The working demo</p>
-        <p>The first working build. TypeScript on the Pear runtime: an Electron desktop app that seeds over Hypercore/Hyperswarm, a React interface, and a payment channel that settles as you watch. Stage 1 complete with 2,000+ passing tests.</p>
-        <div class="tags"><span>TypeScript</span><span>Pear runtime</span><span>Electron</span><span>Hypercore</span></div>
-      </div>
-      <div class="track">
-        <h3><a href="https://git.sovit.xyz/npub1s0vtechh66tx7vrwdud8zfyheu9zca7swwfrzd4qu2a4f93mxs6qvn9adx/git.sovit.xyz/nfx">NFX</a></h3>
-        <p class="role">The production rebuild</p>
-        <p>A Rust core speaks iroh natively, video ships as content-addressed CMAF segments, and the Tauri 2 viewer verifies every byte by sha256 in WASM before the player sees it — so a browser keeps playing from peers even after the origin disappears.</p>
-        <div class="tags"><span>Rust</span><span>iroh</span><span>CMAF</span><span>Tauri 2</span></div>
+  <section id="fit">
+    <div class="wrap">
+      <p class="kicker">How it fits</p>
+      <h2>One set of rules, two programs, one network</h2>
+      <p class="lead">The repositories are not competing versions of the same thing. They are layers, and each one leans on the one before it.</p>
+
+      <ol class="flow">
+        <li class="step">
+          <p class="step-k">1 · The rules</p>
+          <h3>An open standard</h3>
+          <p>How a video is described, found, checked and paid for. Anyone can build software that follows it, without asking us.</p>
+          <ul class="parts">
+            <li><b>The NFX documents</b>in <a href="https://github.com/SovereignTechnology/nfx">nfx</a></li>
+          </ul>
+        </li>
+        <li class="step">
+          <p class="step-k">2 · The software</p>
+          <h3>Two programs that follow them</h3>
+          <p>Written separately, in different languages, and tested against each other in both directions.</p>
+          <ul class="parts">
+            <li><b>nfxd</b>the Rust node, in <a href="https://github.com/SovereignTechnology/nfx">nfx</a></li>
+            <li><b>Nutflix desktop</b>the app, in <a href="https://github.com/SovereignTechnology/nutflix-pear">nutflix-pear</a></li>
+          </ul>
+        </li>
+        <li class="step">
+          <p class="step-k">3 · Watching</p>
+          <h3>Ways to watch</h3>
+          <p>Two work today and a third is on the way. They pull from the same network of seeders.</p>
+          <ul class="parts">
+            <li><b>The desktop app</b>released for Linux, from <a href="https://github.com/SovereignTechnology/nutflix-pear">nutflix-pear</a></li>
+            <li><b>The web player</b>in a browser; <a href="https://github.com/SovereignTechnology/nutflix-nsite">nutflix-nsite</a> is for publishing it on Nostr</li>
+            <li><b>The Pear app</b>pre-alpha, in <a href="https://github.com/SovereignTechnology/nutflix-runtime">nutflix-runtime</a></li>
+          </ul>
+        </li>
+      </ol>
+
+      <p class="fit-note"><strong>They share one network.</strong> A free video seeded by <code>nfxd</code> plays in the desktop app and in a browser, and <code>nfxd</code> can fetch a video that the desktop app seeds. That is the point of writing the rules down first.</p>
+    </div>
+  </section>
+
+  <section id="idea">
+    <div class="wrap">
+      <p class="kicker">The idea</p>
+      <h2>Buffer = money</h2>
+      <p class="lead">Seeding a video costs disk and bandwidth. Nutflix pays for it directly, from the viewer to the seeder, with no subscription and no advertiser in between.</p>
+      <div class="ideas">
+        <div class="idea">
+          <span class="n">01</span>
+          <h3>Buffer is a spend bar</h3>
+          <p>How far ahead your player fetches is a spending decision. Pause the player and the payments stop. You only pay for video that actually arrives.</p>
+        </div>
+        <div class="idea">
+          <span class="n">02</span>
+          <h3>Pay as it arrives</h3>
+          <p>Each piece of video that reaches your player is paid for with a tiny Cashu payment to the peer that served it. No invoices for things you did not watch.</p>
+        </div>
+        <div class="idea">
+          <span class="n">03</span>
+          <h3>50/50 by default</h3>
+          <p>Each payment carries two locked sets of ecash, one for the creator and one for the seeder, so neither can take the other's share. Creators can change the split.</p>
+        </div>
+        <div class="idea">
+          <span class="n">04</span>
+          <h3>Nostr-native</h3>
+          <p>Videos, seeder announcements, comments and playlists are signed Nostr events, not rows in somebody's database.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <section id="protocol">
-    <p class="kicker">Open protocol</p>
-    <h2>Twelve documents, no gatekeepers</h2>
-    <div class="grid proto">
-      <div class="proto-item"><code>NFX-01</code><span>Networks &amp; versions</span></div>
-      <div class="proto-item"><code>NFX-02</code><span>Catalog manifest (kind 38504)</span></div>
-      <div class="proto-item"><code>NFX-03</code><span>Availability beacons (kind 20464)</span></div>
-      <div class="proto-item"><code>NFX-04</code><span>Scoped relay profile</span></div>
-      <div class="proto-item"><code>NFX-05</code><span>Segments &amp; content integrity</span></div>
-      <div class="proto-item"><code>NFX-06</code><span>iroh transport</span></div>
-      <div class="proto-item"><code>NFX-07</code><span>Payments, open mode</span></div>
-      <div class="proto-item"><code>NFX-08</code><span>Payments, licensed mode &amp; vouchers</span></div>
-      <div class="proto-item"><code>NFX-09</code><span>Split-mint extension</span></div>
-      <div class="proto-item"><code>NFX-10</code><span>Web transport</span></div>
-      <div class="proto-item"><code>NFX-11</code><span>Registry &amp; conformance</span></div>
-      <div class="proto-item"><code>NFX-12</code><span>Hypercore transport (optional)</span></div>
+    <div class="wrap">
+      <p class="kicker">Open protocol</p>
+      <h2>Thirteen documents, no gatekeepers</h2>
+      <p class="lead">NFX is written down as a set of short documents. Six are frozen, which means software can rely on them not changing underneath it.</p>
+      <ul class="proto">
+        <li><code>NFX-01</code><span>Networks &amp; versions</span><em class="frozen">Frozen</em></li>
+        <li><code>NFX-02</code><span>Catalog manifest</span><em class="frozen">Frozen</em></li>
+        <li><code>NFX-03</code><span>Availability beacons</span><em class="frozen">Frozen</em></li>
+        <li><code>NFX-04</code><span>Scoped relay profile</span><em class="frozen">Frozen</em></li>
+        <li><code>NFX-05</code><span>Segments &amp; content integrity</span><em class="frozen">Frozen</em></li>
+        <li><code>NFX-06</code><span>iroh transport</span><em class="frozen">Frozen</em></li>
+        <li><code>NFX-07</code><span>Payments, open mode</span><em>Draft</em></li>
+        <li><code>NFX-08</code><span>Payments, licensed mode &amp; vouchers</span><em>Draft</em></li>
+        <li><code>NFX-09</code><span>Split-mint extension</span><em>Draft</em></li>
+        <li><code>NFX-10</code><span>Web transport</span><em>Draft</em></li>
+        <li><code>NFX-11</code><span>Registry &amp; conformance</span><em>Living</em></li>
+        <li><code>NFX-12</code><span>HyperDHT transport (optional)</span><em>Draft</em></li>
+        <li><code>NFX-16</code><span>Seeder ratings (optional)</span><em>Draft</em></li>
+      </ul>
+      <p class="note">NFX-13 to NFX-15 are reserved for documents that are not written yet. The spec text is <strong>public domain (CC0)</strong>: anyone can build a player, a seeder, a relay, a mint or an indexer from these documents alone. <a href="https://github.com/SovereignTechnology/nfx/tree/main/spec">Read them on GitHub</a>.</p>
     </div>
-    <p class="note">Spec text is <b>public domain (CC0)</b>. Anyone can implement a watcher, seeder, relay, mint or indexer against these documents alone.</p>
   </section>
 
   <section id="status">
-    <p class="kicker">Status</p>
-    <h2>Where it stands</h2>
-    <div class="status-card">
-      <span class="mark">✅</span>
-      <div>
-        <h3>Milestone 1 — free delivery: complete</h3>
-        <p>A creator publishes, a desktop viewer plays over iroh, a plain browser resolves the video by its Nostr manifest — and playback keeps going from peers after the origin is cut off.</p>
+    <div class="wrap">
+      <p class="kicker">Status</p>
+      <h2>Where it stands</h2>
+      <p class="lead">Honestly: free video works, and paid video is still an experiment.</p>
+      <div class="status">
+        <div class="stat">
+          <span class="pill">Working</span>
+          <h3>Free video, end to end</h3>
+          <p>A creator publishes, seeders serve, and a desktop app or a plain browser plays. Playback keeps going from peers after the original source is gone. It runs on a <a href="https://github.com/SovereignTechnology/nfx/blob/main/docs/nfx/testnet.md">public test network</a>.</p>
+        </div>
+        <div class="stat">
+          <span class="pill">Released</span>
+          <h3>You can try it now</h3>
+          <p>The <a href="https://web.nutflix.xyz/">web player</a> runs in a browser with nothing to install. The <a href="https://github.com/SovereignTechnology/nutflix-pear/releases/latest">desktop app</a> is released for Linux, and <a href="https://github.com/SovereignTechnology/nfx/releases">nfxd</a> has Linux builds too.</p>
+        </div>
+        <div class="stat">
+          <span class="pill pill-warn">Experimental</span>
+          <h3>Paid video</h3>
+          <p>The desktop app can pay seeders as a video arrives, but it has only been tested against local mints with fake Lightning, and no real payment is on record. In NFX, payments are specified and still being audited, and are not switched on.</p>
+        </div>
       </div>
+      <p class="caution"><strong>Experimental software, in active development.</strong> Protocols, formats and APIs can change without notice, and no outside party has audited the desktop app. Cashu ecash is bearer money, and a mint can lose or withhold it. If you add a real mint to the desktop app, keep the balance small.</p>
     </div>
-    <div class="status-card">
-      <span class="mark">🛠️</span>
-      <div>
-        <h3>Milestone 2 — paid delivery: in active development</h3>
-        <p>Per-chunk ecash payments to seeders, the money path of the nfx-pay crate, is under active adversarial audit.</p>
-      </div>
-    </div>
-    <p class="note">Experimental software in active development. Testnet only: every sat on Nutflix today is a fake sat from a testnet mint — nothing of value is at stake.</p>
   </section>
 
-  <footer>
-    <div class="links">
-      <a href="https://git.sovit.xyz/npub1s0vtechh66tx7vrwdud8zfyheu9zca7swwfrzd4qu2a4f93mxs6qvn9adx/git.sovit.xyz/nutflix-demo">nutflix-demo — git.sovit.xyz</a>
-      <a href="https://git.sovit.xyz/npub1s0vtechh66tx7vrwdud8zfyheu9zca7swwfrzd4qu2a4f93mxs6qvn9adx/git.sovit.xyz/nfx">nfx — git.sovit.xyz</a>
-      <a href="https://github.com/SovereignTechnology/nfx">GitHub mirror — SovereignTechnology/nfx</a>
-    </div>
-    <p class="fine">Code: AGPL-3.0 · Spec text: CC0 · © 2026 <a href="https://www.sovtech.pro/">Sovereign Technology</a>, El Salvador</p>
-  </footer>
-
 </main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a class="wordmark" href="#top" aria-label="Nutflix, top of page">
+        <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#f0662a"/><path d="M12.5 9.5v13l11-6.5z" fill="#0f0f0f"/></svg>
+        nutflix
+      </a>
+      <ul class="foot-links">
+        <li><a href="https://github.com/SovereignTechnology/nfx">nfx</a></li>
+        <li><a href="https://github.com/SovereignTechnology/nutflix-pear">nutflix-pear</a></li>
+        <li><a href="https://github.com/SovereignTechnology/nutflix-runtime">nutflix-runtime</a></li>
+        <li><a href="https://github.com/SovereignTechnology/nutflix-nsite">nutflix-nsite</a></li>
+        <li><a href="https://github.com/SovereignTechnology/nutflix.xyz">nutflix.xyz</a></li>
+      </ul>
+    </div>
+    <p class="fine">Development happens in the open over Nostr; the GitHub repositories are mirrors. Code: AGPL-3.0 · Spec text: CC0 · © 2026 <a href="https://www.sovtech.pro/">Sovereign Technology</a>, El Salvador</p>
+  </div>
+</footer>
 
 </body>
 </html>
