@@ -19,7 +19,8 @@ contains no IPs and no internal infrastructure details.
 | `SovereignTechnology/nutflix-pear` | The desktop app |
 | `SovereignTechnology/nutflix-runtime` | The app with no download server (pre-alpha) |
 | `SovereignTechnology/nutflix-nsite` | The web player, published on Nostr |
-| `SovereignTechnology/nutflix.xyz` | This site |
+
+This repository is deliberately not listed.
 
 When a repository is added, or one changes state (a first release, the nsite
 going live), edit its card and its status pill. The page names no version
