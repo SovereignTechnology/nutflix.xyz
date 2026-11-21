@@ -3,10 +3,29 @@
 Landing page for **nutflix.xyz** — a single static `public/index.html` with no
 build step, no JS and no dependencies.
 
-The page is public-safe by design: it describes the product, the two tracks
-(Nutflix demo / NFX redesign), the NFX-01…12 protocol suite and the current
-milestone status. It deliberately contains no hostnames, IPs or internal
-infrastructure details.
+The page describes the product, explains each Nutflix repository in plain
+language with a link to its code on GitHub, shows how the repositories fit
+together, and lists the NFX protocol suite and the current status.
+
+It is public-safe by design. The only addresses on it are public ones: the
+GitHub repositories and the web player at `web.nutflix.xyz`. It deliberately
+contains no IPs and no internal infrastructure details.
+
+## What the page lists
+
+| Repository | Card |
+|------------|------|
+| `SovereignTechnology/nfx` | The open standard, and the Rust engine that runs it |
+| `SovereignTechnology/nutflix-pear` | The desktop app |
+| `SovereignTechnology/nutflix-runtime` | The app with no download server (pre-alpha) |
+| `SovereignTechnology/nutflix-nsite` | The web player, published on Nostr |
+
+This repository is deliberately not listed.
+
+When a repository is added, or one changes state (a first release, the nsite
+going live), edit its card and its status pill. The page names no version
+numbers, so a release needs no edit: it links to each Releases page instead.
+The protocol list follows the table in nfx's `spec/README.md`.
 
 ## Remotes
 
@@ -38,7 +57,13 @@ command empty. Every push to `main` then deploys.
 
 Open `public/index.html` in a browser; that is the whole preview environment.
 The favicon is an inline SVG data URI and all styling is a single `<style>`
-block, so the site stays a one-file deployable.
+block, so the site stays a one-file deployable. The file itself loads nothing
+else: no scripts, no web fonts and no images. (On the live site Cloudflare adds
+its Web Analytics beacon at the edge.)
+
+The colours are the Nutflix app's own (`--nf-color-*` in nutflix-pear's
+`packages/ui`). The page is dark by default and follows the reader's
+`prefers-color-scheme` to a light variant; check both after a change.
 
 ## License
 
