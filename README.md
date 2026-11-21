@@ -53,13 +53,20 @@ Settings → **Builds** → Connect → GitHub → `SovereignTechnology/nutflix.
 production branch `main`, **deploy command `npx wrangler deploy`**, build
 command empty. Every push to `main` then deploys.
 
+**Known issue (2026-11-20):** the `Workers Builds: nutflix-xyz` check fails on
+pushes to other branches (seen on two pull-request commits), while the build
+for `main` succeeds and deploys. The cause is not known: the log is only in the
+Cloudflare dashboard (the `wrangler` login has no Workers Builds scope), and
+`wrangler deploy --dry-run` passes locally. A red check on a pull request does
+not mean the change would fail to deploy; check the `main` build after the
+merge.
+
 ## Editing
 
 Open `public/index.html` in a browser; that is the whole preview environment.
 The favicon is an inline SVG data URI and all styling is a single `<style>`
-block, so the site stays a one-file deployable. The file itself loads nothing
-else: no scripts, no web fonts and no images. (On the live site Cloudflare adds
-its Web Analytics beacon at the edge.)
+block, so the site stays a one-file deployable. It loads nothing else: no
+scripts, no web fonts and no images.
 
 The colours are the Nutflix app's own (`--nf-color-*` in nutflix-pear's
 `packages/ui`). The page is dark by default and follows the reader's
