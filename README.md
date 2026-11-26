@@ -77,3 +77,7 @@ The colours are the Nutflix app's own (`--nf-color-*` in nutflix-pear's
 ## License
 
 AGPL-3.0 — see [LICENSE](LICENSE).
+
+That is this repository: the page and its files. The footer's "Code: AGPL-3.0-or-later" is a
+statement about the four repositories the page lists (nutflix, nutflix-pear, nutflix-runtime and
+nutflix-nsite), each of which declares AGPL-3.0-or-later in its own tree. It grants nothing here.
