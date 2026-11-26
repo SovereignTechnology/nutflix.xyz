@@ -8,14 +8,15 @@ language with a link to its code on GitHub, shows how the repositories fit
 together, and lists the NFX protocol suite and the current status.
 
 It is public-safe by design. The only addresses on it are public ones: the
-GitHub repositories and the web player at `web.nutflix.xyz`. It deliberately
+GitHub repositories, the web player at `web.nutflix.xyz` and Sovereign
+Technology's own site, `www.sovtech.pro`. It deliberately
 contains no IPs and no internal infrastructure details.
 
 ## What the page lists
 
 | Repository | Card |
 |------------|------|
-| `SovereignTechnology/nfx` | The open standard, and the Rust engine that runs it |
+| `SovereignTechnology/nutflix` (was `nfx`) | The open standard, and the Rust engine that runs it |
 | `SovereignTechnology/nutflix-pear` | The desktop app |
 | `SovereignTechnology/nutflix-runtime` | The app with no download server (pre-alpha) |
 | `SovereignTechnology/nutflix-nsite` | The web player, published on Nostr |
@@ -25,7 +26,7 @@ This repository is deliberately not listed.
 When a repository is added, or one changes state (a first release, the nsite
 going live), edit its card and its status pill. The page names no version
 numbers, so a release needs no edit: it links to each Releases page instead.
-The protocol list follows the table in nfx's `spec/README.md`.
+The protocol list follows the table in nutflix's `spec/README.md`.
 
 ## Remotes
 
@@ -33,6 +34,7 @@ The protocol list follows the table in nfx's `spec/README.md`.
 |----------|-----|------|
 | `origin` | `ssh://git@sovit.xyz:2222/sovtech/nutflix.xyz.git` | GitLab (private, source of truth) |
 | `github` | `git@github.com:SovereignTechnology/nutflix.xyz.git` | GitHub (public, feeds Workers Builds) |
+| `nostr` | `nostr://npub1s0vtechh66tx7vrwdud8zfyheu9zca7swwfrzd4qu2a4f93mxs6qvn9adx/git.sovit.xyz/nutflix.xyz` | Nostr (NIP-34, public) |
 
 ## Deployment
 

@@ -372,22 +372,22 @@ footer{padding:48px 0 64px;color:var(--muted)}
 
         <article class="repo">
           <div><span class="pill">Released · free video</span></div>
-          <a class="slug" href="https://github.com/SovereignTechnology/nfx"><span>SovereignTechnology/</span>nfx</a>
+          <a class="slug" href="https://github.com/SovereignTechnology/nutflix"><span>SovereignTechnology/</span>nutflix</a>
           <h3>The open standard, and the Rust engine that runs it</h3>
           <p>NFX is the rulebook underneath Nutflix, together with the software that proves the rules work. A creator publishes a signed description of a video on Nostr. Anyone can keep a copy and serve it. Before your player shows you anything, it checks every piece of the video against the creator's signed hashes, so nobody in the middle can swap what you are watching.</p>
           <p><strong>Free video works today</strong> on a public test network. Paying seeders for each chunk in ecash is written into the standard and is still being audited before it is switched on.</p>
           <p class="inside-label">What's inside</p>
           <ul class="inside">
             <li>The protocol documents, public domain, for anyone to build against</li>
-            <li><code>nfxd</code>, a node with no screen that publishes and seeds video, on a server or at home</li>
-            <li><code>nfx-package</code>, which turns an ordinary video file into verifiable, streamable segments</li>
+            <li><code>nutflixd</code>, a node with no screen that publishes and seeds video, on a server or at home</li>
+            <li><code>nutflix-package</code>, which turns an ordinary video file into verifiable, streamable segments</li>
             <li>A browser player that verifies every file before it plays it</li>
           </ul>
           <ul class="tags"><li>Rust</li><li>iroh</li><li>WebRTC</li><li>CMAF</li><li>Nostr</li></ul>
           <div class="actions">
-            <a class="btn btn-ghost btn-sm" href="https://github.com/SovereignTechnology/nfx"><svg width="16" height="16" aria-hidden="true"><use href="#gh"/></svg>View on GitHub</a>
-            <a class="more" href="https://github.com/SovereignTechnology/nfx/tree/main/spec">Read the spec</a>
-            <a class="more" href="https://github.com/SovereignTechnology/nfx/releases">Releases</a>
+            <a class="btn btn-ghost btn-sm" href="https://github.com/SovereignTechnology/nutflix"><svg width="16" height="16" aria-hidden="true"><use href="#gh"/></svg>View on GitHub</a>
+            <a class="more" href="https://github.com/SovereignTechnology/nutflix/tree/main/spec">Read the spec</a>
+            <a class="more" href="https://github.com/SovereignTechnology/nutflix/releases">Releases</a>
           </div>
         </article>
 
@@ -395,7 +395,7 @@ footer{padding:48px 0 64px;color:var(--muted)}
           <div><span class="pill">Released for Linux · demo</span></div>
           <a class="slug" href="https://github.com/SovereignTechnology/nutflix-pear"><span>SovereignTechnology/</span>nutflix-pear</a>
           <h3>The desktop app</h3>
-          <p>Nutflix as an app you install. It looks like a video site you already know, with a home page, search, Shorts, channels, comments and playlists, but there is no company server behind it. Videos stream straight from other people's computers, and the people who watch pay the people who seed, a few sats at a time, as the video arrives.</p>
+          <p>Nutflix as an app you install. It looks like a video site you already know, with a home page, search, Shorts, channels, comments and playlists, but no company server holds or serves the videos. Videos stream straight from other people's computers, and the people who watch pay the people who seed, a few sats at a time, as the video arrives.</p>
           <p>Creators set the price and choose the mints they accept, and <strong>you see the price before you press Play</strong>. By default each payment is split 50/50 between the creator and the seeder. It is a demo: not something to trust with money you cannot afford to lose.</p>
           <p class="inside-label">What's inside</p>
           <ul class="inside">
@@ -416,7 +416,7 @@ footer{padding:48px 0 64px;color:var(--muted)}
           <a class="slug" href="https://github.com/SovereignTechnology/nutflix-runtime"><span>SovereignTechnology/</span>nutflix-runtime</a>
           <h3>The app with no download server</h3>
           <p>An experiment in shipping Nutflix without a website to download it from. You would install it from a <code>pear://</code> link, and it would update itself from that same link, over the peer-to-peer Pear network.</p>
-          <p>It reuses the desktop app's code, so it speaks the same language as the seeders that are already out there. The plan is for it to play free videos, trade video with web browsers, seed what it plays and publish new videos. <strong>Nothing here runs yet:</strong> the design is written down and the first pieces are in.</p>
+          <p>It reuses the desktop app's code, so it speaks the same language as the seeders that are already out there. The plan is for it to play free videos, trade video with web browsers, seed what it plays and publish new videos. <strong>It is not released yet:</strong> the app is built, installed and played in automated tests, but there is no <code>pear://</code> link to install it from.</p>
           <p class="inside-label">What's inside</p>
           <ul class="inside">
             <li>The design record, and the experiments that have to pass first</li>
@@ -430,11 +430,11 @@ footer{padding:48px 0 64px;color:var(--muted)}
         </article>
 
         <article class="repo">
-          <div><span class="pill pill-info">Tooling · not yet published</span></div>
+          <div><span class="pill">Tooling · published</span></div>
           <a class="slug" href="https://github.com/SovereignTechnology/nutflix-nsite"><span>SovereignTechnology/</span>nutflix-nsite</a>
           <h3>The web player, published on Nostr</h3>
-          <p>A small tool that publishes the Nutflix web player as an “nsite”: a website whose files live on public file servers and whose table of contents is a signed Nostr event, instead of everything sitting on one web host. Once it is published, any nsite gateway can serve the player, so watching does not depend on our server staying up.</p>
-          <p>There is no app code here. It takes one exact build of the web player, uploads each file under its own hash, signs the list, and then checks that gateways hand back the same bytes. <strong>The site itself has not been published yet.</strong></p>
+          <p>A small tool that publishes the Nutflix web player as an “nsite”: a website whose files live on public file servers and whose table of contents is a signed Nostr event, instead of everything sitting on one web host. It is published, and any nsite gateway that lets the page run can serve the player, so opening it does not depend on our web host staying up.</p>
+          <p>There is no app code here. It takes one exact build of the web player, uploads each file under its own hash, signs the list, and then checks that gateways hand back the same bytes. <strong>The site is published</strong>, and the repository records how each gateway serves it.</p>
           <p class="inside-label">What's inside</p>
           <ul class="inside">
             <li>A publish script that uploads, signs and announces, and asks before it signs anything</li>
@@ -463,7 +463,7 @@ footer{padding:48px 0 64px;color:var(--muted)}
           <h3>An open standard</h3>
           <p>How a video is described, found, checked and paid for. Anyone can build software that follows it, without asking us.</p>
           <ul class="parts">
-            <li><b>The NFX documents</b>in <a href="https://github.com/SovereignTechnology/nfx">nfx</a></li>
+            <li><b>The NFX documents</b>in <a href="https://github.com/SovereignTechnology/nutflix">nutflix</a></li>
           </ul>
         </li>
         <li class="step">
@@ -471,7 +471,7 @@ footer{padding:48px 0 64px;color:var(--muted)}
           <h3>Two programs that follow them</h3>
           <p>Written separately, in different languages, and tested against each other in both directions.</p>
           <ul class="parts">
-            <li><b>nfxd</b>the Rust node, in <a href="https://github.com/SovereignTechnology/nfx">nfx</a></li>
+            <li><b>nutflixd</b>the Rust node, in <a href="https://github.com/SovereignTechnology/nutflix">nutflix</a></li>
             <li><b>Nutflix desktop</b>the app, in <a href="https://github.com/SovereignTechnology/nutflix-pear">nutflix-pear</a></li>
           </ul>
         </li>
@@ -481,13 +481,13 @@ footer{padding:48px 0 64px;color:var(--muted)}
           <p>Two work today and a third is on the way. They pull from the same network of seeders.</p>
           <ul class="parts">
             <li><b>The desktop app</b>released for Linux, from <a href="https://github.com/SovereignTechnology/nutflix-pear">nutflix-pear</a></li>
-            <li><b>The web player</b>in a browser; <a href="https://github.com/SovereignTechnology/nutflix-nsite">nutflix-nsite</a> is for publishing it on Nostr</li>
+            <li><b>The web player</b>in a browser; <a href="https://github.com/SovereignTechnology/nutflix-nsite">nutflix-nsite</a> publishes it on Nostr</li>
             <li><b>The Pear app</b>pre-alpha, in <a href="https://github.com/SovereignTechnology/nutflix-runtime">nutflix-runtime</a></li>
           </ul>
         </li>
       </ol>
 
-      <p class="fit-note"><strong>They share one network.</strong> A free video seeded by <code>nfxd</code> plays in the desktop app and in a browser, and <code>nfxd</code> can fetch a video that the desktop app seeds. That is the point of writing the rules down first.</p>
+      <p class="fit-note"><strong>They share one network.</strong> A free video seeded by <code>nutflixd</code> plays in the desktop app and in a browser, and <code>nutflixd</code> can fetch a video that the desktop app seeds. That is the point of writing the rules down first.</p>
     </div>
   </section>
 
@@ -524,8 +524,8 @@ footer{padding:48px 0 64px;color:var(--muted)}
   <section id="protocol">
     <div class="wrap">
       <p class="kicker">Open protocol</p>
-      <h2>Thirteen documents, no gatekeepers</h2>
-      <p class="lead">NFX is written down as a set of short documents. Six are frozen, which means software can rely on them not changing underneath it.</p>
+      <h2>Fourteen documents, no gatekeepers</h2>
+      <p class="lead">NFX is written down as a set of short documents. Six are frozen: software is built against them, and a change to one is an exception that is dated and explained.</p>
       <ul class="proto">
         <li><code>NFX-01</code><span>Networks &amp; versions</span><em class="frozen">Frozen</em></li>
         <li><code>NFX-02</code><span>Catalog manifest</span><em class="frozen">Frozen</em></li>
@@ -540,8 +540,9 @@ footer{padding:48px 0 64px;color:var(--muted)}
         <li><code>NFX-11</code><span>Registry &amp; conformance</span><em>Living</em></li>
         <li><code>NFX-12</code><span>HyperDHT transport (optional)</span><em>Draft</em></li>
         <li><code>NFX-16</code><span>Seeder ratings (optional)</span><em>Draft</em></li>
+        <li><code>NFX-17</code><span>Seeder lookup (optional)</span><em>Draft</em></li>
       </ul>
-      <p class="note">NFX-13 to NFX-15 are reserved for documents that are not written yet. The spec text is <strong>public domain (CC0)</strong>: anyone can build a player, a seeder, a relay, a mint or an indexer from these documents alone. <a href="https://github.com/SovereignTechnology/nfx/tree/main/spec">Read them on GitHub</a>.</p>
+      <p class="note">NFX-13 to NFX-15 are reserved for documents that are not written yet. The spec text is <strong>public domain (CC0)</strong>: anyone can build a player, a seeder, a relay, a mint or an indexer from these documents alone. <a href="https://github.com/SovereignTechnology/nutflix/tree/main/spec">Read them on GitHub</a>.</p>
     </div>
   </section>
 
@@ -554,12 +555,12 @@ footer{padding:48px 0 64px;color:var(--muted)}
         <div class="stat">
           <span class="pill">Working</span>
           <h3>Free video, end to end</h3>
-          <p>A creator publishes, seeders serve, and a desktop app or a plain browser plays. Playback keeps going from peers after the original source is gone. It runs on a <a href="https://github.com/SovereignTechnology/nfx/blob/main/docs/nfx/testnet.md">public test network</a>.</p>
+          <p>A creator publishes, seeders serve, and a desktop app or a plain browser plays. Playback keeps going from peers after the original source is gone. It runs on a <a href="https://github.com/SovereignTechnology/nutflix/blob/main/docs/nfx/testnet.md">public test network</a>.</p>
         </div>
         <div class="stat">
           <span class="pill">Released</span>
           <h3>You can try it now</h3>
-          <p>The <a href="https://web.nutflix.xyz/">web player</a> runs in a browser with nothing to install. The <a href="https://github.com/SovereignTechnology/nutflix-pear/releases/latest">desktop app</a> is released for Linux, and <a href="https://github.com/SovereignTechnology/nfx/releases">nfxd</a> has Linux builds too.</p>
+          <p>The <a href="https://web.nutflix.xyz/">web player</a> runs in a browser with nothing to install. The <a href="https://github.com/SovereignTechnology/nutflix-pear/releases/latest">desktop app</a> is released for Linux, and <a href="https://github.com/SovereignTechnology/nutflix/releases">nutflixd</a> has Linux builds too (the releases so far call it <code>nfxd</code>).</p>
         </div>
         <div class="stat">
           <span class="pill pill-warn">Experimental</span>
@@ -581,13 +582,13 @@ footer{padding:48px 0 64px;color:var(--muted)}
         nutflix
       </a>
       <ul class="foot-links">
-        <li><a href="https://github.com/SovereignTechnology/nfx">nfx</a></li>
+        <li><a href="https://github.com/SovereignTechnology/nutflix">nutflix</a></li>
         <li><a href="https://github.com/SovereignTechnology/nutflix-pear">nutflix-pear</a></li>
         <li><a href="https://github.com/SovereignTechnology/nutflix-runtime">nutflix-runtime</a></li>
         <li><a href="https://github.com/SovereignTechnology/nutflix-nsite">nutflix-nsite</a></li>
       </ul>
     </div>
-    <p class="fine">Development happens in the open over Nostr; the GitHub repositories are mirrors. Code: <span class="nb">AGPL-3.0</span> · Spec text: CC0 · © 2026 <a href="https://www.sovtech.pro/">Sovereign Technology</a>, El Salvador</p>
+    <p class="fine">Development happens in the open over Nostr; the GitHub repositories are mirrors. Code: <span class="nb">AGPL-3.0-or-later</span> · Spec text: CC0 · © 2026 <a href="https://www.sovtech.pro/">Sovereign Technology</a>, El Salvador</p>
   </div>
 </footer>
 
